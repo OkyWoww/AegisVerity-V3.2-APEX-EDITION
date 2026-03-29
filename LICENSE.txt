@@ -1,0 +1,17 @@
+AegisVerity V3.2 (Apex Edition)
+Copyright (c) 2026 — All Rights Reserved
+
+Permission is granted to read, study, and reference this repository 
+for academic and security research purposes with proper attribution.
+
+Restrictions:
+- Commercial use, redistribution, or deployment of this work is strictly prohibited 
+  without prior written consent from the author.
+- Modification or derivative works may not be distributed publicly.
+- Proprietary or redacted implementation details must not be reconstructed, 
+  reverse-engineered, or reused.
+
+Disclaimer:
+This repository is provided "as is" for research purposes only, without warranty 
+of any kind. The author assumes no liability for misuse or damages arising 
+from use of this work.
