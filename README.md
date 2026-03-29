@@ -152,10 +152,6 @@ Concurrent `LruCache` bounded to **5,000 entries** (preventing OOM and Eviction 
 **The Cortex (Slow Path)**  
 Shannon Entropy `H(X)` analysis of unverified traffic payloads, executed at the **native C++ layer** for performance and instrumentation resistance.
 
-```
-H(X) = -Σ[p(x) · log₂(p(x))]
-```
-
 **DoT / DoQ Port 853 Radar**: Detects DNS-over-TLS (TCP) and DNS-over-QUIC (UDP) tunnel attempts with ARM-safe unsigned port extraction.
 
 ---
@@ -174,11 +170,6 @@ NDK-based C++ self-defense module operating below the Java security model.
 - `/proc/self/maps` scan for Frida, Xposed, linjector, and Substrate footprints
 
 **ARM-Safe Memory Handling**:
-```cpp
-// Prevents SIGBUS on ARM (unaligned memory access)
-uint32_t dest_ip_raw;
-memcpy(&dest_ip_raw, &packet[16], 4);
-inet_ntop(AF_INET, &dest_ip_raw, dest_ip, INET_ADDRSTRLEN);
 ```
 
 On any integrity violation → immediate `_exit(1)`. No state preserved, no prompt displayed.
@@ -189,27 +180,10 @@ On any integrity violation → immediate `_exit(1)`. No state preserved, no prom
 
 - Sessions stored as `AtomicBoolean` in **volatile memory only** — never written to disk  
 - Timeout validated via `SystemClock.elapsedRealtime()` — immune to NTP Time Spoofing  
-- `ON_STOP` lifecycle → **unconditional session revocation**  
-- `FLAG_SECURE` → visual concealment from Android task switcher  
-
----
 
 ### Module E — Smart Gatekeeper (Zero-Trust Sensor Control)
 
 On `ACTION_SCREEN_OFF`, enforces sensor access restrictions across all non-whitelisted applications using `DevicePolicyManager.setPermissionGrantState()` — **not** standard runtime permissions which lack cross-application authority.
-
-```
-Screen OFF
-    │
-    ▼
-setPermissionGrantState(camera)   → PERMISSION_GRANT_STATE_DENIED
-setPermissionGrantState(microphone) → PERMISSION_GRANT_STATE_DENIED
-    │
-    ▼ (for all non-whitelisted UIDs)
-Background surveillance capability: ELIMINATED
-```
-
----
 
 ### Module F — Reactor Core (Indestructible Device Owner)
 
@@ -217,40 +191,7 @@ Final enforcement authority receiving threat signals from all modules.
 
 **Genesis Block — Zero-Window Privilege Locking**:
 
-```kotlin
-// V3.1 (VULNERABLE — race condition window exists)
-dpm.setActiveAdmin(...)
-// ← attacker can execute: dpm remove-active-admin HERE
-dpm.addUserRestriction(DISALLOW_DEBUGGING_FEATURES)
-
-// V3.2 (HARDENED — zero window)
-override fun onProfileProvisioningComplete(...) {
-    // This callback fires AT THE MOMENT DO is granted
-    dpm.addUserRestriction(DISALLOW_DEBUGGING_FEATURES)
-    // No window. No race condition.
-}
-```
-
 **System App Safeguard**: Logic gate preventing suspension of `FLAG_SYSTEM` packages — protects against logic-induced bootloops.
-
-**Ghost Switch + Biometric Gate**:
-```kotlin
-fun onGhostSwitchTapped(context: Context) {
-    val now = System.currentTimeMillis()
-    if (now - lastTapTime > tapWindowMs) tapCount = 0  // 3s window
-    lastTapTime = now
-
-    val km = context.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
-    if (km.isKeyguardLocked) { tapCount = 0; return }  // Prevent tap accumulation
-
-    if (++tapCount >= 7) {
-        tapCount = 0
-        initiateNuclearFailsafeWithBiometrics()  // BIOMETRIC_STRONG required
-    }
-}
-```
-
----
 
 ## 🚨 Incident Response Scenarios
 
